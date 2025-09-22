@@ -3,7 +3,6 @@
 	This question requires you to use a stack to achieve a bracket match
 */
 
-// I AM NOT DONE
 #[derive(Debug)]
 struct Stack<T> {
 	size: usize,
@@ -101,8 +100,28 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 
 fn bracket_match(bracket: &str) -> bool
 {
-	//TODO
-	true
+	let mut stack = vec![];
+	for c in bracket.chars() {
+		match c {
+			'{' | '(' | '[' => stack.push(c),
+			'}' | ')' | ']' => {
+				let Some(prev_c) = stack.pop() else {
+					return false;
+				};
+				let expected = match prev_c {
+					'{' => '}',
+					'[' => ']',
+					'(' => ')',
+					_ => unreachable!()
+				};
+				if expected != c {
+					return false;
+				}
+			}
+			_ => {},
+		}
+	}
+	stack.is_empty()
 }
 
 #[cfg(test)]
